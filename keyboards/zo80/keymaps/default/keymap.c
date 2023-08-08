@@ -49,18 +49,24 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 
 void keyboard_post_init_user(void) {
     rgblight_layers = _rgb_layers;
+
+    if (layer_state_cmp(default_layer_state, _WIN_BASE)) {
+        rgblight_blink_layer(1, 250);
+    } else {
+        rgblight_blink_layer(0, 250);
+    };
 }
 
 bool process_record_user(uint16_t keycode, keyrecord_t *record) {
     switch (keycode) {
         case LOCK:
             if (record->event.pressed) {
-                if (IS_LAYER_ON(0)) {
-                    // MAC
-                    register_code16(C(G(KC_Q)));
-                } else {
+                if (layer_state_cmp(default_layer_state, _WIN_BASE)) {
                     // WINDOWS
                     register_code16(G(KC_L));
+                } else {
+                    // MAC
+                    register_code16(C(G(KC_Q)));
                 };
             } else {
                 unregister_code16(C(G(KC_Q)));
@@ -69,25 +75,21 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
             return false;
         case SWAP_OS:
             if (record->event.pressed) {
-                if (IS_LAYER_ON(0)) {
-                    // MAC is currently on
-                    set_single_persistent_default_layer(_WIN_BASE);
-                    layer_move(_WIN_BASE);
-                } else {
-                    // WINDOWS is currently on
+                if (layer_state_cmp(default_layer_state, _WIN_BASE)) {
                     set_single_persistent_default_layer(_MAC_BASE);
-                    layer_move(_MAC_BASE);
+                    rgblight_blink_layer(0, 250);
+                } else {
+                    set_single_persistent_default_layer(_WIN_BASE);
+                    rgblight_blink_layer(1, 250);
                 };
             };
             return false;
         case FOR_OS:
             if (record->event.pressed) {
-                if (IS_LAYER_ON(0)) {
-                    // MAC
-                    SEND_STRING("macos");
+                if (layer_state_cmp(default_layer_state, _WIN_BASE)) {
+                    rgblight_blink_layer(1, 250);
                 } else {
-                    // WINDOWS
-                    SEND_STRING("windows");
+                    rgblight_blink_layer(0, 250);
                 };
             };
             return false;
@@ -99,15 +101,4 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
         default:
             return true;
     };
-}
-
-layer_state_t default_layer_state_set_user(layer_state_t state) {
-    if (layer_state_cmp(state, _MAC_BASE)) {
-        rgblight_blink_layer_repeat(0, 400, 2);
-    } else  if (layer_state_cmp(state, _WIN_BASE)) {
-        rgblight_blink_layer_repeat(1, 400, 2);
-    } else {
-        rgblight_blink_layer_repeat(2, 400, 2);
-    }
-    return state;
 }
