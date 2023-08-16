@@ -16,9 +16,10 @@ enum custom_keycodes {
 const rgblight_segment_t PROGMEM _mac_layer[] = RGBLIGHT_LAYER_SEGMENTS( {0, 20, HSV_WHITE} );
 const rgblight_segment_t PROGMEM _win_layer[] = RGBLIGHT_LAYER_SEGMENTS( {0, 20, HSV_BLUE} );
 const rgblight_segment_t PROGMEM _warn_layer[] = RGBLIGHT_LAYER_SEGMENTS( {0, 20, HSV_RED} );
+const rgblight_segment_t PROGMEM _ily_layer[] = RGBLIGHT_LAYER_SEGMENTS( {0, 20, HSV_PINK} );
 
 const rgblight_segment_t* const PROGMEM _rgb_layers[] =
-    RGBLIGHT_LAYERS_LIST( _mac_layer, _win_layer, _warn_layer );
+    RGBLIGHT_LAYERS_LIST( _mac_layer, _win_layer, _warn_layer, _ily_layer );
 
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
     [_MAC_BASE] = LAYOUT_ansi(
@@ -90,6 +91,7 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
         case ILY:
             if (record->event.pressed) {
                 SEND_STRING("I love you!\n");
+                rgblight_blink_layer(3, 250);
             };
             return false;
         default:
