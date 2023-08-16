@@ -49,12 +49,6 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 
 void keyboard_post_init_user(void) {
     rgblight_layers = _rgb_layers;
-
-    if (layer_state_cmp(default_layer_state, _WIN_BASE)) {
-        rgblight_blink_layer(1, 250);
-    } else {
-        rgblight_blink_layer(0, 250);
-    };
 }
 
 bool process_record_user(uint16_t keycode, keyrecord_t *record) {

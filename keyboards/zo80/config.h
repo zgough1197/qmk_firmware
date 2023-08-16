@@ -5,8 +5,6 @@
 
 #define DIODE_DIRECTION COL2ROW
 
-#define DOUBLE_TAP_SHIFT_TURNS_ON_CAPS_WORD
-
 #define RGB_DI_PIN E2
 #ifdef RGB_DI_PIN
     #define RGBLED_NUM 20
